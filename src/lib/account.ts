@@ -16,7 +16,7 @@ export async function getAccount(instanceId: string, id: number): Promise<Accoun
     if (!instance) { console.log("NO INSTANCE"); return undefined; }
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('arasaka.db');
+        const db = new sqlite3.Database('db/arasaka.db');
         db.get('SELECT * FROM accounts WHERE instanceId = (?) AND id = (?)', [instanceId, id], (err, row: Account | undefined) => {
             db.close();
             if (err) {
@@ -65,7 +65,7 @@ export async function getTopAccounts(instanceId: string): Promise<TopAccounts | 
     if (!instance) { return }
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('arasaka.db');
+        const db = new sqlite3.Database('db/arasaka.db');
         db.all('SELECT * FROM accounts WHERE instanceId = (?) ORDER BY balance DESC LIMIT 10', [instanceId], (err, rows: Account[] | undefined) => {
             db.close();
             if (err) { reject(err) };
@@ -83,7 +83,7 @@ export async function checkPassword(instanceId: string, id: number, password: st
     if (!instance) { console.log("NO INSTANCE"); return undefined; }
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('arasaka.db');
+        const db = new sqlite3.Database('db/arasaka.db');
         db.get('SELECT * FROM accounts WHERE instanceId = (?) AND id = (?) AND password = (?)', [instanceId, id, password], (err, row: Account | undefined) => {
             db.close();
             if (err) {

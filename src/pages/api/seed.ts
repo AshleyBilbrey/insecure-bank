@@ -17,7 +17,7 @@ export default function handler(
         return res.status(401).json({ status: "failure" });
     }
 
-    const db = new sqlite3.Database('arasaka.db');
+    const db = new sqlite3.Database('db/arasaka.db');
 
     db.serialize(() => {
         db.run("CREATE TABLE IF NOT EXISTS instances (id INTEGER PRIMARY KEY, code TEXT)", function (err) {

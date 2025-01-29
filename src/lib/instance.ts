@@ -9,7 +9,7 @@ export type Instance = {
 
 export async function getInstance(instanceId: string): Promise<Instance | undefined> {
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('arasaka.db');
+        const db = new sqlite3.Database('db/arasaka.db');
         db.get('SELECT * FROM instances WHERE code = (?)', [instanceId], (err, row: Instance | undefined) => {
             db.close();
             if (err) { reject(err) };
@@ -22,7 +22,7 @@ export async function provisionInstance(): Promise<string> {
     const randomProvision = crypto.randomBytes(16).toString('hex');
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database('arasaka.db');
+        const db = new sqlite3.Database('db/arasaka.db');
         db.run("INSERT INTO instances(code) VALUES(?)", [randomProvision], (_result: RunResult, err: Error) => {
             db.close();
             if (err) { reject(err) }
