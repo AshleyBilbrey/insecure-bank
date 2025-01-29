@@ -40,7 +40,7 @@ export async function createAccount(instanceId: string, name: string, startingBa
     if (!instance) return;
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database("arasaka.db");
+        const db = new sqlite3.Database("db/arasaka.db");
 
         db.run(
             "INSERT INTO accounts(name, balance, password, instanceId) VALUES(?, ?, ?, ?)",
@@ -106,7 +106,7 @@ export async function updateBalance(instanceId: string, id: number, newBalance: 
     if (!instance) return;
 
     return new Promise((resolve, reject) => {
-        const db = new sqlite3.Database("arasaka.db");
+        const db = new sqlite3.Database("db/arasaka.db");
 
         db.run(
             "UPDATE accounts SET balance = (?) WHERE id = (?) AND instanceId = (?)",
