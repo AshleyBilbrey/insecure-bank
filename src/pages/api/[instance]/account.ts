@@ -14,6 +14,11 @@ export type TokenBody = {
     instanceId: string
 }
 
+interface CustomJwtPayload {
+    accountId: number;
+    instanceId: string;
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<AccountApiResponse>
@@ -30,13 +35,11 @@ export default async function handler(
         return res.status(400).json({ status: "failure" });
     }
 
-    const decoded = jwt.decode(req.body.auth, { complete: true })
-    if (!decoded || !decoded.payload || typeof decoded.payload !== 'string') {
+    const decoded = jwt.decode(req.body.auth) as CustomJwtPayload;
+    if (!decoded) {
         return res.status(400).json({ status: "failure" });
     }
-    const body: TokenBody = JSON.parse(decoded.payload);
-    console.log(req.query.instance, body.accountId)
-    let account: Account | undefined = await getAccount(req.query.instance, body.accountId);
+    const account: Account | undefined = await getAccount(req.query.instance, decoded.accountId);
     console.log(account);
     if (!account) {
         console.log("2")

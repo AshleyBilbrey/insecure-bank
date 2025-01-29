@@ -28,7 +28,7 @@ export default async function handler(
     }
 
     console.log("Checking user", idInt, "with password", req.body.password);
-    let account = await checkPassword(req.query.instance, idInt, req.body.password);
+    const account = await checkPassword(req.query.instance, idInt, req.body.password);
     if (!account) {
         return res.status(400).json({ status: "failure" });
     }

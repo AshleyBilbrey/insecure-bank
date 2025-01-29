@@ -1,5 +1,5 @@
 import { getInstance } from "./instance"
-import sqlite3, { RunResult } from "sqlite3";
+import sqlite3 from "sqlite3";
 
 export type Account = {
     id: number

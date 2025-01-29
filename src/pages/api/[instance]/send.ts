@@ -7,6 +7,11 @@ type SendApiResponse = {
     message: string
 }
 
+interface CustomJwtPayload {
+    accountId: number;
+    instanceId: string;
+}
+
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<SendApiResponse>
@@ -34,8 +39,11 @@ export default async function handler(
         return res.status(400).json({ status: "failure", message: "You must send at least one eurodollar." });
     }
 
-    let decoded = jwt.decode(req.body.auth)
-    let senderAccount: Account | undefined = await getAccount(req.query.instance, decoded.accountId);
+    const decoded = jwt.decode(req.body.auth) as CustomJwtPayload;
+    if (!decoded) {
+        return res.status(400).json({ status: "failure", message: "Bad Request" });
+    }
+    const senderAccount: Account | undefined = await getAccount(req.query.instance, decoded.accountId);
 
     if (!senderAccount) {
         return res.status(400).json({ status: "failure", message: "Bad Request" });
@@ -45,7 +53,7 @@ export default async function handler(
         return res.status(400).json({ status: "failure", message: "You can't overdraft your account." });
     }
 
-    let receiverAccount: Account | undefined = await getAccount(req.query.instance, parseInt(req.body.accountNumber));
+    const receiverAccount: Account | undefined = await getAccount(req.query.instance, parseInt(req.body.accountNumber));
 
     if (!receiverAccount) {
         return res.status(400).json({ status: "failure", message: "That account does not exist!" });
